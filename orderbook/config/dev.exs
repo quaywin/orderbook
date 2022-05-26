@@ -74,6 +74,6 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-config :bitmex,
+config :orderbook, OrderbookWeb.WebSocket,
   api_key_id: "zvSVuCA5CVzXm5PKa5TwUnQV",
   api_key_secret: "Cus1T17GHCi1CM4S_HOo8nF9JYa9RN9-3xr5oiXZUFAKKrzS"

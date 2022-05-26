@@ -15,7 +15,12 @@ defmodule Orderbook.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Orderbook.PubSub},
       # Start the Endpoint (http/https)
-      OrderbookWeb.Endpoint
+      OrderbookWeb.Endpoint,
+      %{
+        id: :orderbook,
+        start: {OrderbookWeb.WebSocket, :start_link, ["orderBookL2_25:XBTUSD"]}
+      }
+      # {OrderbookWeb.WebSocket, ["position", true], id: :position}
       # Start a worker by calling: Orderbook.Worker.start_link(arg)
       # {Orderbook.Worker, arg}
     ]

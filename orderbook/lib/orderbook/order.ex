@@ -3,7 +3,7 @@ defmodule Orderbook.Order do
   import Ecto.Changeset
 
   schema "orders" do
-    field :id, :string
+    field :order_id, :string
     field :order_qty, :float
     field :order_type, :string
     field :price, :float

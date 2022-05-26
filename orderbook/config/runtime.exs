@@ -51,6 +51,9 @@ if config_env() == :prod do
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
+  bitmex_api_key_id = System.get_env("API_KEY_ID") || "zvSVuCA5CVzXm5PKa5TwUnQV"
+  bitmex_api_key_secret = System.get_env("API_KEY_SECRET") || "Cus1T17GHCi1CM4S_HOo8nF9JYa9RN9-3xr5oiXZUFAKKrzS"
+
   config :orderbook, OrderbookWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [
@@ -62,6 +65,10 @@ if config_env() == :prod do
       port: port
     ],
     secret_key_base: secret_key_base
+
+  config :orderbook, OrderbookWeb.WebSocket,
+      bitmex_api_key_id: bitmex_api_key_id,
+      bitmex_api_key_secret: bitmex_api_key_secret
 
   # ## Configuring the mailer
   #

@@ -35,8 +35,8 @@ defmodule Orderbook.MixProject do
     [
       {:phoenix, "~> 1.6.9"},
       {:phoenix_ecto, "~> 4.4"},
-      {:etso, "~> 0.1.6"},
-      {:ecto_sql, "~> 3.6"},
+      {:etso, "~> 1.0.1"},
+      {:ecto_sql, "~> 3.8.2"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
@@ -49,7 +49,8 @@ defmodule Orderbook.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      {:websockex, "~> 0.4.3"}
     ]
   end
 
