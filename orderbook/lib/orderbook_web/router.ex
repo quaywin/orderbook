@@ -20,6 +20,14 @@ defmodule OrderbookWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/api", OrderbookWeb do
+    pipe_through :api
+
+    post "/order", OrderController, :create
+    put "/order/:id", OrderController, :update
+    delete "/order/:id", OrderController, :delete
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", OrderbookWeb do
   #   pipe_through :api

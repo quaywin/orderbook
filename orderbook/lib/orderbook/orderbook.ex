@@ -27,6 +27,8 @@ defmodule Orderbook.Orderbook do
       :symbol => m["symbol"]
       }
     end)
+    old_data = Orderbook.Repo.all(Orderbook.Orderbook)
+    Enum.map(old_data, fn x -> Orderbook.Repo.delete(x) end)
     insert_data = Enum.map(unquote_data, fn m -> Map.to_list(m) end)
     Orderbook.Repo.insert_all(Orderbook.Orderbook, insert_data)
   end
