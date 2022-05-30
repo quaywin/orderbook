@@ -22,10 +22,7 @@ defmodule Orderbook.Order do
     |> validate_required([:id, :symbol, :side, :orderQty, :orderType, :currency, :price, :status])
   end
 
-  def insert_orders(data) do
-    old_data = Orderbook.Repo.all(Orderbook.Order)
-    Enum.map(old_data, fn x -> Orderbook.Repo.delete(x) end)
-
+  def insert(data) do
     unquote_data = Enum.map(data, fn m -> %{
       :order_id => m["orderID"],
       :order_qty => m["orderQty"],
@@ -39,5 +36,21 @@ defmodule Orderbook.Order do
     end)
     insert_data = Enum.map(unquote_data, fn m -> Map.to_list(m) end)
     Orderbook.Repo.insert_all(Orderbook.Order, insert_data)
+  end
+
+  def update(data) do
+    Enum.map(data, fn order ->
+      id = order["orderID"]
+      unquote_data = cond do
+        order["price"] -> [price: elem(Float.parse(to_string(order["price"])),0)]
+        order["orderQty"] -> [order_qty: order["orderQty"]]
+        order["ordStatus"] -> [status: order["ordStatus"]]
+      end
+      # insert_data = Enum.map(unquote_data, fn m -> Map.to_list(m) end)
+      updated_order = Orderbook.Repo.get_by(Orderbook.Order, order_id: id)
+      Ecto.Changeset.change(updated_order, unquote_data)
+        |> Orderbook.Repo.update()
+    end)
+
   end
 end

@@ -12,17 +12,33 @@ defmodule OrderbookWeb.WebSocket do
     WebSockex.start(url, __MODULE__, topic)
   end
 
-  def handle_frame({type, msg}, state) do
-    IO.puts(msg)
+  def handle_frame({_type, msg}, state) do
     msg_decode = Jason.decode(msg)
     msg_map = elem(msg_decode, 1)
     table = msg_map["table"]
     data = msg_map["data"]
+    action = msg_map["action"]
     case table do
       "orderBookL2_25" ->
-        Orderbook.Orderbook.insert_list(data)
+        case action do
+          "partial" ->
+            Orderbook.Orderbook.insert(data)
+          "update" ->
+            Orderbook.Orderbook.update(data)
+          "insert" ->
+            Orderbook.Orderbook.insert(data)
+          "delete" ->
+            Orderbook.Orderbook.delete(data)
+        end
       "order" ->
-        Orderbook.Order.insert_orders(data)
+        case action do
+          "partial" ->
+            Orderbook.Order.insert(data)
+          "update" ->
+            Orderbook.Order.update(data)
+          "insert" ->
+            Orderbook.Order.insert(data)
+        end
       _ -> nil
     end
     {:ok, state}
