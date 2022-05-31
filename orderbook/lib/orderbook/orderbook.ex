@@ -19,15 +19,14 @@ defmodule Orderbook.Orderbook do
   end
 
   def insert(data) do
-    unquote_data = Enum.map(data, fn m -> %{
-      :id => m["id"],
-      :price => elem(Float.parse(to_string(m["price"])),0),
-      :side => m["side"],
-      :size => m["size"],
-      :symbol => m["symbol"]
-      }
+    insert_data = Enum.map(data, fn order -> [
+        id: order["id"],
+        price: elem(Float.parse(to_string(order["price"])),0),
+        side: order["side"],
+        size: order["size"],
+        symbol: order["symbol"]
+      ]
     end)
-    insert_data = Enum.map(unquote_data, fn m -> Map.to_list(m) end)
     Orderbook.Repo.insert_all(Orderbook.Orderbook, insert_data)
   end
 

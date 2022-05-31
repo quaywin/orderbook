@@ -18,23 +18,22 @@ defmodule Orderbook.Order do
   @doc false
   def changeset(order, attrs) do
     order
-    |> cast(attrs, [:id, :symbol, :side, :orderQty, :orderType, :currency, :price, :status])
-    |> validate_required([:id, :symbol, :side, :orderQty, :orderType, :currency, :price, :status])
+    |> cast(attrs, [:symbol, :side, :order_qty, :order_type, :currency, :price, :status])
+    |> validate_required([:symbol, :side, :order_qty, :order_type, :currency, :price, :status])
   end
 
   def insert(data) do
-    unquote_data = Enum.map(data, fn m -> %{
-      :order_id => m["orderID"],
-      :order_qty => m["orderQty"],
-      :order_type => m["ordType"],
-      :price => elem(Float.parse(to_string(m["price"])),0),
-      :symbol => m["symbol"],
-      :side => m["side"],
-      :currency => m["currency"],
-      :status => m["ordStatus"]
-      }
+    insert_data = Enum.map(data, fn order -> [
+      order_id: order["orderID"],
+      order_qty: order["orderQty"],
+      order_type: order["ordType"],
+      price: elem(Float.parse(to_string(order["price"])),0),
+      symbol: order["symbol"],
+      side: order["side"],
+      currency: order["currency"],
+      status: order["ordStatus"]
+    ]
     end)
-    insert_data = Enum.map(unquote_data, fn m -> Map.to_list(m) end)
     Orderbook.Repo.insert_all(Orderbook.Order, insert_data)
   end
 

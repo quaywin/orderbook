@@ -13,6 +13,7 @@ defmodule OrderbookWeb.WebSocket do
   end
 
   def handle_frame({_type, msg}, state) do
+    IO.puts(msg)
     msg_decode = Jason.decode(msg)
     msg_map = elem(msg_decode, 1)
     table = msg_map["table"]
@@ -38,6 +39,24 @@ defmodule OrderbookWeb.WebSocket do
             Orderbook.Order.update(data)
           "insert" ->
             Orderbook.Order.insert(data)
+        end
+      "position" ->
+        case action do
+          "partial" ->
+            Orderbook.Position.insert(data)
+          "update" ->
+            Orderbook.Position.update(data)
+          "insert" ->
+            Orderbook.Position.update(data)
+        end
+      "margin" ->
+        case action do
+          "partial" ->
+            Orderbook.Balance.insert(data)
+          "update" ->
+            Orderbook.Balance.update(data)
+          "insert" ->
+            Orderbook.Balance.insert(data)
         end
       _ -> nil
     end
