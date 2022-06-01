@@ -1,0 +1,17 @@
+<table>
+  <thead>
+    <tr>
+      <th>Price</th>
+      <th>Size</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="list_buy">
+    <%= for buy <- @list_buy do %>
+      <tr id={"buy-#{buy.id}"}>
+        <td><%= buy.price %></td>
+        <td><%= buy.size %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

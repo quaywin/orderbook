@@ -13,7 +13,6 @@ defmodule OrderbookWeb.WebSocket do
   end
 
   def handle_frame({_type, msg}, state) do
-    IO.puts(msg)
     msg_decode = Jason.decode(msg)
     msg_map = elem(msg_decode, 1)
     table = msg_map["table"]

@@ -1,6 +1,7 @@
 defmodule Orderbook.Orderbook do
   use Ecto.Schema
   import Ecto.Changeset
+  # import Ecto.Query, only: [from: 2]
 
   schema "orderbooks" do
     field :price, :float
@@ -28,6 +29,8 @@ defmodule Orderbook.Orderbook do
       ]
     end)
     Orderbook.Repo.insert_all(Orderbook.Orderbook, insert_data)
+    orderbooks = get_list()
+    broadcast(orderbooks, :orderbook_fetched)
   end
 
   def update(data) do
@@ -48,6 +51,8 @@ defmodule Orderbook.Orderbook do
       updated_order = Orderbook.Repo.get(Orderbook.Orderbook, id)
       Ecto.Changeset.change(updated_order, unquote_data)
         |> Orderbook.Repo.update()
+      orderbooks = get_list()
+      broadcast(orderbooks, :orderbook_fetched)
     end)
   end
 
@@ -57,7 +62,35 @@ defmodule Orderbook.Orderbook do
       # insert_data = Enum.map(unquote_data, fn m -> Map.to_list(m) end)
       deleted_order = Orderbook.Repo.get(Orderbook.Orderbook, id)
       Orderbook.Repo.delete(deleted_order)
+      orderbooks = get_list()
+      broadcast(orderbooks, :orderbook_fetched)
     end)
+  end
+
+  # def list_buy() do
+  #   Orderbook.Repo.all(from Orderbook.Orderbook, where: [side: "Buy"], select: [:id, :price, :side, :size, :symbol])
+  # end
+
+  # def list_sell() do
+  #   Orderbook.Repo.all(from Orderbook.Orderbook, where: [side: "Sell"], select: [:id, :price, :side, :size, :symbol])
+  # end
+
+  def get_list() do
+    Orderbook.Repo.all(Orderbook.Orderbook)
+      |>Enum.sort_by(&(&1.price), :desc)
+  end
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(Orderbook.PubSub, "orderbooks")
+  end
+
+  defp broadcast({:error, _reason} = error, _event) do
+    error
+  end
+
+  defp broadcast(orderbooks, event) do
+    Phoenix.PubSub.broadcast(Orderbook.PubSub, "orderbooks", {event, orderbooks})
+    {:ok, orderbooks}
   end
 
 end
