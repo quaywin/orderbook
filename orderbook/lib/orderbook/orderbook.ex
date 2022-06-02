@@ -77,7 +77,6 @@ defmodule Orderbook.Orderbook do
 
   def get_list() do
     Orderbook.Repo.all(Orderbook.Orderbook)
-      |>Enum.sort_by(&(&1.price), :desc)
   end
 
   def subscribe do

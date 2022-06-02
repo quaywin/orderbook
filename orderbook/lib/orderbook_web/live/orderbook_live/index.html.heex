@@ -1,16 +1,27 @@
-<table>
+<h1 class="text-3xl font-bold font-sans">
+  Orderbook
+</h1>
+<table class="shadow-lg bg-white border-separate table-auto">
   <thead>
-    <tr>
+    <tr class="bg-blue-100 border text-left px-8 py-4">
+      <th>Total</th>
+      <th>Size</th>
+      <th>Price</th>
       <th>Price</th>
       <th>Size</th>
+      <th>Total</th>
       <th></th>
     </tr>
   </thead>
   <tbody id="list_buy">
-    <%= for buy <- @list_buy do %>
-      <tr id={"buy-#{buy.id}"}>
-        <td><%= buy.price %></td>
+    <%= for {buy, sell} <- @orderbooks do %>
+      <tr id={"buy-#{buy.id}"} class="border px-8 py-4">
+        <td><%= buy.total %></td>
         <td><%= buy.size %></td>
+        <td class="text-green-600"><%= buy.price %></td>
+        <td class="text-red-600"><%= sell.price %></td>
+        <td><%= sell.size %></td>
+        <td><%= sell.total %></td>
       </tr>
     <% end %>
   </tbody>
