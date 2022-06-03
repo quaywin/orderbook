@@ -17,8 +17,7 @@ defmodule OrderbookWeb.Router do
   scope "/", OrderbookWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
-    live "/orderbooks", OrderbookLive.Index, :index
+    live "/", OrderbookLive.Index, :index
   end
 
   scope "/api", OrderbookWeb do

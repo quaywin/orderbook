@@ -29,8 +29,8 @@ defmodule Orderbook.Orderbook do
       ]
     end)
     Orderbook.Repo.insert_all(Orderbook.Orderbook, insert_data)
-    orderbooks = get_list()
-    broadcast(orderbooks, :orderbook_fetched)
+    get_list()
+      |> broadcast(:orderbook_fetched)
   end
 
   def update(data) do
@@ -51,9 +51,9 @@ defmodule Orderbook.Orderbook do
       updated_order = Orderbook.Repo.get(Orderbook.Orderbook, id)
       Ecto.Changeset.change(updated_order, unquote_data)
         |> Orderbook.Repo.update()
-      orderbooks = get_list()
-      broadcast(orderbooks, :orderbook_fetched)
     end)
+    get_list()
+      |> broadcast(:orderbook_fetched)
   end
 
   def delete(data) do
@@ -62,9 +62,9 @@ defmodule Orderbook.Orderbook do
       # insert_data = Enum.map(unquote_data, fn m -> Map.to_list(m) end)
       deleted_order = Orderbook.Repo.get(Orderbook.Orderbook, id)
       Orderbook.Repo.delete(deleted_order)
-      orderbooks = get_list()
-      broadcast(orderbooks, :orderbook_fetched)
     end)
+    get_list()
+      |> broadcast(:orderbook_fetched)
   end
 
   # def list_buy() do

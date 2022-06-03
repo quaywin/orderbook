@@ -18,20 +18,20 @@ defmodule Orderbook.Application do
       OrderbookWeb.Endpoint,
       %{
         id: :orderbook,
-        start: {OrderbookWeb.WebSocket, :start_link, ["orderBookL2_25:XBTUSD"]}
+        start: {OrderbookWeb.WebSocket, :start_link, ["orderBookL2_25:XBTUSDT"]}
       },
-      # %{
-      #   id: :order,
-      #   start: {OrderbookWeb.WebSocket, :start_link, ["order", true]}
-      # },
-      # %{
-      #   id: :order,
-      #   start: {OrderbookWeb.WebSocket, :start_link, ["position", true]}
-      # },
-      # %{
-      #   id: :balance,
-      #   start: {OrderbookWeb.WebSocket, :start_link, ["margin", true]}
-      # },
+      %{
+        id: :order,
+        start: {OrderbookWeb.WebSocket, :start_link, ["order", true]}
+      },
+      %{
+        id: :position,
+        start: {OrderbookWeb.WebSocket, :start_link, ["position", true]}
+      },
+      %{
+        id: :balance,
+        start: {OrderbookWeb.WebSocket, :start_link, ["margin", true]}
+      },
       # {OrderbookWeb.WebSocket, ["order", true], id: :order}
       # Start a worker by calling: Orderbook.Worker.start_link(arg)
       # {Orderbook.Worker, arg}

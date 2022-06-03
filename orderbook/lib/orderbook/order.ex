@@ -35,6 +35,8 @@ defmodule Orderbook.Order do
     ]
     end)
     Orderbook.Repo.insert_all(Orderbook.Order, insert_data)
+    get_list()
+      |> broadcast(:order_fetched)
   end
 
   def update(data) do
@@ -51,5 +53,25 @@ defmodule Orderbook.Order do
         |> Orderbook.Repo.update()
     end)
 
+    get_list()
+      |> broadcast(:order_fetched)
+
+  end
+
+  def get_list() do
+    Orderbook.Repo.all(Orderbook.Order)
+  end
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(Orderbook.PubSub, "orders")
+  end
+
+  defp broadcast({:error, _reason} = error, _event) do
+    error
+  end
+
+  defp broadcast(orders, event) do
+    Phoenix.PubSub.broadcast(Orderbook.PubSub, "orders", {event, orders})
+    {:ok, orders}
   end
 end

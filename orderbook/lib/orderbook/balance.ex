@@ -26,6 +26,8 @@ defmodule Orderbook.Balance do
     ]
     end)
     Orderbook.Repo.insert_all(Orderbook.Balance, insert_data)
+    get_list()
+      |> broadcast(:balance_fetched)
   end
 
   def update(data) do
@@ -46,6 +48,24 @@ defmodule Orderbook.Balance do
       Ecto.Changeset.change(updated_balance, unquote_data)
         |> Orderbook.Repo.update()
     end)
+    get_list()
+      |> broadcast(:balance_fetched)
+  end
 
+  def get_list() do
+    Orderbook.Repo.all(Orderbook.Balance)
+  end
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(Orderbook.PubSub, "balances")
+  end
+
+  defp broadcast({:error, _reason} = error, _event) do
+    error
+  end
+
+  defp broadcast(balances, event) do
+    Phoenix.PubSub.broadcast(Orderbook.PubSub, "balances", {event, balances})
+    {:ok, balances}
   end
 end

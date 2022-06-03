@@ -12,6 +12,12 @@ defmodule OrderbookWeb.WebSocket do
     WebSockex.start(url, __MODULE__, topic)
   end
 
+  def terminate(reason, state) do
+    IO.inspect(reason)
+    IO.inspect(state)
+    exit(:normal)
+end
+
   def handle_frame({_type, msg}, state) do
     msg_decode = Jason.decode(msg)
     msg_map = elem(msg_decode, 1)
@@ -29,6 +35,7 @@ defmodule OrderbookWeb.WebSocket do
             Orderbook.Orderbook.insert(data)
           "delete" ->
             Orderbook.Orderbook.delete(data)
+          _ -> nil
         end
       "order" ->
         case action do
@@ -38,15 +45,17 @@ defmodule OrderbookWeb.WebSocket do
             Orderbook.Order.update(data)
           "insert" ->
             Orderbook.Order.insert(data)
+          _ -> nil
         end
       "position" ->
-        case action do
-          "partial" ->
-            Orderbook.Position.insert(data)
-          "update" ->
-            Orderbook.Position.update(data)
-          "insert" ->
-            Orderbook.Position.update(data)
+          case action do
+            "partial" ->
+              Orderbook.Position.insert(data)
+            "update" ->
+              Orderbook.Position.update(data)
+            "insert" ->
+              Orderbook.Position.init(data)
+            _ -> nil
         end
       "margin" ->
         case action do
@@ -56,6 +65,7 @@ defmodule OrderbookWeb.WebSocket do
             Orderbook.Balance.update(data)
           "insert" ->
             Orderbook.Balance.insert(data)
+          _ -> nil
         end
       _ -> nil
     end

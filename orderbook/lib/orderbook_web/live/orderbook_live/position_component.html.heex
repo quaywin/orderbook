@@ -1,0 +1,31 @@
+<div class="px-8 pb-8">
+  <p class="text-lg">
+    Positions
+  </p>
+  <table class="w-full shadow-lg bg-white border-separate table-auto">
+    <thead>
+      <tr class="bg-blue-100 border text-left px-8 py-4">
+        <th>Symbol</th>
+        <th>Size</th>
+        <th>Value</th>
+        <th>Entry Price</th>
+        <th>Mark Price</th>
+        <th>Liquid Price</th>
+        <th>ROE%</th>
+      </tr>
+    </thead>
+    <tbody >
+      <%= for position <- @positions do %>
+        <tr id={"position-#{position.id}"} class="border px-8 py-4">
+          <td><%= position.symbol %></td>
+          <td class={"#{position.style}"}><%= "#{position.size} #{position.size_currency}" %></td>
+          <td ><%= "#{position.value} #{position.value_currency}" %></td>
+          <td ><%= position.entry_price %></td>
+          <td ><%= position.mark_price %></td>
+          <td ><%= position.liquid_price %></td>
+          <td><%= "#{position.roe}%" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,57 +1,23 @@
 defmodule OrderbookWeb.OrderbookLive.Index do
-      use OrderbookWeb, :live_view
+  use OrderbookWeb, :live_view
 
-      @impl true
-      def mount(_params, _session, socket) do
-        if connected?(socket) do
-          Orderbook.Orderbook.subscribe()
-        end
-        orderbooks =
-          Orderbook.Orderbook.get_list()
-          |> get_list()
+  def handle_info({:orderbook_fetched, new_items}, socket) do
+    send_update OrderbookWeb.OrderbookLive.OrderbookComponent, id: "orderbook", orderbooks: new_items
+    {:noreply, socket}
+  end
 
-        {:ok, assign(socket, orderbooks: orderbooks), temporary_assigns: [orderbooks: []]}
-      end
+  def handle_info({:balance_fetched, new_items}, socket) do
+    send_update OrderbookWeb.OrderbookLive.BalanceComponent, id: "balance", balances: new_items
+    {:noreply, socket}
+  end
 
-      @impl true
-      def handle_info({:orderbook_fetched, new_items}, socket) do
-        socket = socket
-          |> assign(:orderbooks, get_list(new_items))
-        {:noreply, socket}
-      end
+  def handle_info({:order_fetched, new_items}, socket) do
+    send_update OrderbookWeb.OrderbookLive.OrderComponent, id: "order", orders: new_items
+    {:noreply, socket}
+  end
 
-      defp orderbook_column(list_buy, list_sell, buy, sell, index) do
-        {
-          Map.put(buy, :total, get_total(list_buy, buy, index)),
-          Map.put(sell, :total, get_total(list_sell, sell, index)),
-        }
-      end
-
-      defp get_total(list, item, index) do
-        if index > 0 do
-          list
-            |>Enum.take(index + 1)
-            |>Enum.map(fn el -> el.size end)
-            |>Enum.reduce(fn x, acc -> x + acc end)
-        else
-          item.size
-        end
-      end
-
-      defp get_list(orderbooks) do
-        list_buy =
-          orderbooks
-          |>Enum.filter(fn order -> order.side == "Buy" end)
-          |>Enum.sort_by(&(&1.price), :desc)
-          |>Enum.take(15)
-        list_sell =
-          orderbooks
-          |>Enum.filter(fn order -> order.side == "Sell" end)
-          |>Enum.sort_by(&(&1.price), :asc)
-          |>Enum.take(15)
-        list_buy
-          |> Enum.with_index()
-          |> Enum.map(fn {buy, index} -> orderbook_column(list_buy, list_sell, buy, Enum.at(list_sell, index), index) end)
-      end
-
+  def handle_info({:position_fetched, new_items}, socket) do
+    send_update OrderbookWeb.OrderbookLive.PositionComponent, id: "position", positions: new_items
+    {:noreply, socket}
+  end
 end

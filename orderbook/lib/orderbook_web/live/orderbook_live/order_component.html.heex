@@ -1,0 +1,28 @@
+<div class="px-8 pb-8">
+  <p class="text-lg">
+    Active Orders
+  </p>
+  <table class="w-full shadow-lg bg-white border-separate table-auto">
+    <thead>
+      <tr class="bg-blue-100 border text-left px-8 py-4">
+        <th>Symbol</th>
+        <th>Size</th>
+        <th>Order Price</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody >
+      <%= for order <- @orders do %>
+        <tr id={"order-#{order.id}"} class="border px-8 py-4">
+          <td><%= order.symbol %></td>
+          <td class={"#{order.style}"}><%= "#{order.order_qty} #{order.currency}" %></td>
+          <td ><%= order.price %></td>
+          <td ><%= order.order_type %></td>
+          <td><%= order.status %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

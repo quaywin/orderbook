@@ -1,0 +1,16 @@
+<div class="basis-auto px-8 pb-8">
+  <div class="flex flex-row">
+    <div>
+      <span>
+        Available Balance
+      </span>
+    </div>
+    <div class="pl-8 flex flex-col">
+      <%= for balance <- @balances do %>
+        <div>
+          <span><%= balance %></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
