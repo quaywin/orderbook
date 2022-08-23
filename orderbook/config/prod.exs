@@ -47,5 +47,6 @@ config :logger, level: :info
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
-url: [scheme: "https", host: "murmuring-garden-89863.herokuapp.com", port: 443],
-force_ssl: [rewrite_on: [:x_forwarded_proto]],
+config :orderbook, OrderbookWeb.Endpoint,
+  url: [scheme: "https", host: "murmuring-garden-89863.herokuapp.com", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]]
